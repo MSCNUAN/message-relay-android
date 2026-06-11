@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.MessageRelay" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item><item name="android:colorAccent">#5368FF</item><item name="android:navigationBarColor">#F7F8FF</item><item name="android:statusBarColor">#F7F8FF</item><item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>
