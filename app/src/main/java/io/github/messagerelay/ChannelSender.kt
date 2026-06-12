@@ -56,7 +56,7 @@ object ChannelSender {
     }
 
     fun serialize(channels: List<ChannelConfig>): String = JSONArray().apply {
-        channels.forEach { put(JSONObject().put("type", it.type).put("url", it.url).put("secret", it.secret).put("enabled", it.enabled)) }
+        ChannelSelection.singleEnabled(channels).forEach { put(JSONObject().put("type", it.type).put("url", it.url).put("secret", it.secret).put("enabled", true)) }
     }.toString()
 
     fun send(channel: ChannelConfig, title: String, body: String): DeliveryResult {

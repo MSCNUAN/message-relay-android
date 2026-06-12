@@ -71,4 +71,38 @@ class CoreLogicTest {
         assertFalse(results[1].success)
         assertTrue(results[1].retryable)
     }
+
+    @Test fun `built in templates include communication presets`() {
+        assertEquals(
+            setOf("general", "phone", "sms", "wechat", "work_wechat", "qq", "dingtalk", "feishu"),
+            TemplateCatalog.builtIns.map { it.id }.toSet()
+        )
+        assertEquals("来电提醒：验证码", TemplateCatalog.byId("phone").template().renderTitle(message))
+        assertEquals("短信：验证码", TemplateCatalog.byId("sms").template().renderTitle(message))
+    }
+
+    @Test fun `template recommendation uses package and app name`() {
+        assertEquals("wechat", TemplateCatalog.recommend("微信", "com.tencent.mm"))
+        assertEquals("work_wechat", TemplateCatalog.recommend("企业微信", "com.tencent.wework"))
+        assertEquals("sms", TemplateCatalog.recommend("信息", "com.android.messaging"))
+        assertEquals("phone", TemplateCatalog.recommend("电话", "com.android.dialer"))
+        assertEquals("general", TemplateCatalog.recommend("日历", "com.android.calendar"))
+    }
+
+    @Test fun `selected apps are deduplicated by package`() {
+        val selected = SelectedSources.add(emptyList(), SourceSelection("短信", "com.sms", "sms"))
+        val duplicate = SelectedSources.add(selected, SourceSelection("另一名称", "com.sms", "general"))
+        assertEquals(1, duplicate.size)
+        assertEquals("短信", duplicate.single().appName)
+    }
+
+    @Test fun `only first enabled channel is retained`() {
+        val channels = listOf(
+            ChannelConfig("dingtalk", "https://oapi.dingtalk.com/a", enabled = false),
+            ChannelConfig("feishu", "https://open.feishu.cn/a"),
+            ChannelConfig("bark", "https://api.day.app/a")
+        )
+        assertEquals("feishu", ChannelSelection.singleEnabled(channels).single().type)
+        assertEquals(1, ChannelSender.parse(ChannelSender.serialize(channels)).size)
+    }
 }

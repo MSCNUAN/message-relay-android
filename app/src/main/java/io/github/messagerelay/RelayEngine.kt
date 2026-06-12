@@ -12,8 +12,9 @@ object RelayEngine {
 
     suspend fun process(context: Context, message: RelayMessage) {
         val dao = RelayDatabase.get(context).relayDao()
-        val rules = dao.rules().map { RelayRule(setOf(it.packageName), it.includes.lines().filter(String::isNotBlank), it.excludes.lines().filter(String::isNotBlank)) }
-        if (rules.none { it.matches(message) } || !dedupe.accept(message, System.currentTimeMillis())) return
+        val rule = dao.rule(message.packageName) ?: return
+        val relayRule = RelayRule(setOf(rule.packageName), rule.includes.lines().filter(String::isNotBlank), rule.excludes.lines().filter(String::isNotBlank))
+        if (!relayRule.matches(message) || !dedupe.accept(message, System.currentTimeMillis())) return
         val settings = AppSettingsRepository(context).current()
         if (settings.paused) return
         if (settings.quietHours().shouldQueue(message, LocalTime.now())) {
@@ -22,11 +23,11 @@ object RelayEngine {
             scheduleQueueFlush(context, settings)
             return
         }
-        enqueue(context, message)
+        enqueue(context, message, templateId = rule.templateId)
     }
 
-    fun enqueue(context: Context, message: RelayMessage, delayed: Boolean = false) {
-        val data = workDataOf("package" to message.packageName, "app" to message.app, "title" to message.title, "body" to message.body, "time" to message.time, "delayed" to delayed)
+    fun enqueue(context: Context, message: RelayMessage, delayed: Boolean = false, templateId: String = "") {
+        val data = workDataOf("package" to message.packageName, "app" to message.app, "title" to message.title, "body" to message.body, "time" to message.time, "delayed" to delayed, "templateId" to templateId)
         WorkManager.getInstance(context).enqueue(
             OneTimeWorkRequestBuilder<RelayWorker>().setInputData(data).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.SECONDS).build()
         )
@@ -47,9 +48,11 @@ class RelayWorker(context: Context, params: WorkerParameters) : CoroutineWorker(
     override suspend fun doWork(): Result {
         val message = RelayMessage(inputData.getString("package").orEmpty(), inputData.getString("app").orEmpty(), inputData.getString("title").orEmpty(), inputData.getString("body").orEmpty(), inputData.getLong("time", System.currentTimeMillis()))
         val dao = RelayDatabase.get(applicationContext).relayDao()
-        val channels = SecureStore(applicationContext).get("channels")?.let(ChannelSender::parse).orEmpty().filter(ChannelConfig::enabled)
+        val channels = ChannelSelection.singleEnabled(SecureStore(applicationContext).get("channels")?.let(ChannelSender::parse).orEmpty())
         val settings = AppSettingsRepository(applicationContext).current()
-        val template = MessageTemplate(settings.templateTitle, settings.templateBody)
+        dao.ensureTemplates(settings)
+        val requestedTemplate = inputData.getString("templateId").orEmpty().ifBlank { dao.rule(message.packageName)?.templateId ?: TemplateCatalog.GENERAL_ID }
+        val template = (dao.template(requestedTemplate)?.definition() ?: TemplateCatalog.byId(TemplateCatalog.GENERAL_ID)).template()
         val secure = SecureStore(applicationContext)
         val relayUrl = secure.get("relay_url").orEmpty()
         val results = if (relayUrl.isNotBlank()) ChannelSender.sendRelay(relayUrl, secure.get("relay_token").orEmpty(), channels, message, template.renderTitle(message), template.renderBody(message))
@@ -72,7 +75,8 @@ class QueueFlushWorker(context: Context, params: WorkerParameters) : CoroutineWo
     override suspend fun doWork(): Result {
         val dao = RelayDatabase.get(applicationContext).relayDao()
         dao.queued().forEach {
-            RelayEngine.enqueue(applicationContext, RelayMessage(it.packageName, it.app, it.title, it.body, it.createdAt), delayed = true)
+            val templateId = dao.rule(it.packageName)?.templateId ?: TemplateCatalog.GENERAL_ID
+            RelayEngine.enqueue(applicationContext, RelayMessage(it.packageName, it.app, it.title, it.body, it.createdAt), delayed = true, templateId = templateId)
             dao.removeQueued(it.id)
         }
         return Result.success()
