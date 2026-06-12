@@ -2,46 +2,79 @@ package io.github.messagerelay
 
 import android.content.Context
 import androidx.work.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 
 object RelayEngine {
     val dedupe = DedupeWindow()
+
     suspend fun process(context: Context, message: RelayMessage) {
         val dao = RelayDatabase.get(context).relayDao()
         val rules = dao.rules().map { RelayRule(setOf(it.packageName), it.includes.lines().filter(String::isNotBlank), it.excludes.lines().filter(String::isNotBlank)) }
         if (rules.none { it.matches(message) } || !dedupe.accept(message, System.currentTimeMillis())) return
-        val prefs = context.getSharedPreferences("relay", Context.MODE_PRIVATE)
-        val paused = prefs.getBoolean("paused", false)
-        if (paused) return
-        val quiet = QuietHours(prefs.getBoolean("quiet_enabled", false))
-        if (quiet.shouldQueue(message, java.time.LocalTime.now())) {
+        val settings = AppSettingsRepository(context).current()
+        if (settings.paused) return
+        if (settings.quietHours().shouldQueue(message, LocalTime.now())) {
             dao.queue(QueuedMessage(packageName = message.packageName, app = message.app, title = message.title, body = message.body, createdAt = message.time))
             dao.trimQueue()
+            scheduleQueueFlush(context, settings)
             return
         }
-        val data = workDataOf("app" to message.app, "title" to message.title, "body" to message.body, "time" to message.time)
-        WorkManager.getInstance(context).enqueue(OneTimeWorkRequestBuilder<RelayWorker>().setInputData(data).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.SECONDS).build())
+        enqueue(context, message)
+    }
+
+    fun enqueue(context: Context, message: RelayMessage, delayed: Boolean = false) {
+        val data = workDataOf("package" to message.packageName, "app" to message.app, "title" to message.title, "body" to message.body, "time" to message.time, "delayed" to delayed)
+        WorkManager.getInstance(context).enqueue(
+            OneTimeWorkRequestBuilder<RelayWorker>().setInputData(data).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.SECONDS).build()
+        )
+    }
+
+    private fun scheduleQueueFlush(context: Context, settings: AppSettings) {
+        val now = LocalTime.now()
+        var minutes = java.time.Duration.between(now, LocalTime.parse(settings.quietEnd)).toMinutes()
+        if (minutes <= 0) minutes += 24 * 60
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "quiet-queue-flush", ExistingWorkPolicy.REPLACE,
+            OneTimeWorkRequestBuilder<QueueFlushWorker>().setInitialDelay(minutes, TimeUnit.MINUTES).build()
+        )
     }
 }
 
 class RelayWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
-        val app = inputData.getString("app").orEmpty()
-        val title = inputData.getString("title").orEmpty()
-        val body = inputData.getString("body").orEmpty()
+        val message = RelayMessage(inputData.getString("package").orEmpty(), inputData.getString("app").orEmpty(), inputData.getString("title").orEmpty(), inputData.getString("body").orEmpty(), inputData.getLong("time", System.currentTimeMillis()))
         val dao = RelayDatabase.get(applicationContext).relayDao()
         val channels = SecureStore(applicationContext).get("channels")?.let(ChannelSender::parse).orEmpty().filter(ChannelConfig::enabled)
-        val template = MessageTemplate()
-        val message = RelayMessage("", app, title, body, inputData.getLong("time", System.currentTimeMillis()))
+        val settings = AppSettingsRepository(applicationContext).current()
+        val template = MessageTemplate(settings.templateTitle, settings.templateBody)
         val secure = SecureStore(applicationContext)
         val relayUrl = secure.get("relay_url").orEmpty()
-        val relayToken = secure.get("relay_token").orEmpty()
-        val successes = if (relayUrl.isNotBlank()) {
-            if (runCatching { ChannelSender.sendRelay(relayUrl, relayToken, channels, message, template.renderTitle(message), template.renderBody(message)) }.getOrDefault(false)) channels.size else 0
-        } else channels.count { runCatching { ChannelSender.send(it, template.renderTitle(message), template.renderBody(message)) }.getOrDefault(false) }
+        val results = if (relayUrl.isNotBlank()) ChannelSender.sendRelay(relayUrl, secure.get("relay_token").orEmpty(), channels, message, template.renderTitle(message), template.renderBody(message))
+        else channels.map { ChannelSender.send(it, template.renderTitle(message), template.renderBody(message)) }
+        val successes = results.count(DeliveryResult::success)
         val status = when { channels.isEmpty() -> "未配置渠道"; successes == channels.size -> "成功"; successes > 0 -> "部分成功"; else -> "发送失败" }
-        dao.addRecord(DeliveryRecord(app = app, title = title, status = status, createdAt = System.currentTimeMillis()))
+        val resultJson = JSONArray().apply { results.forEach { put(JSONObject().put("channel", it.channel).put("success", it.success).put("httpStatus", it.httpStatus).put("retryable", it.retryable).put("error", it.error)) } }.toString()
+        dao.addRecord(DeliveryRecord(packageName = message.packageName, app = message.app, title = message.title, body = message.body, status = status, channelResults = resultJson, createdAt = System.currentTimeMillis(), delayed = inputData.getBoolean("delayed", false)))
         dao.trimRecords()
-        return if (successes == channels.size && channels.isNotEmpty()) Result.success() else if (runAttemptCount < 3) Result.retry() else Result.failure()
+        RelayWidget.refresh(applicationContext)
+        return when {
+            results.isNotEmpty() && results.all(DeliveryResult::success) -> Result.success()
+            results.any(DeliveryResult::retryable) && runAttemptCount < 2 -> Result.retry()
+            else -> Result.failure()
+        }
+    }
+}
+
+class QueueFlushWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val dao = RelayDatabase.get(applicationContext).relayDao()
+        dao.queued().forEach {
+            RelayEngine.enqueue(applicationContext, RelayMessage(it.packageName, it.app, it.title, it.body, it.createdAt), delayed = true)
+            dao.removeQueued(it.id)
+        }
+        return Result.success()
     }
 }

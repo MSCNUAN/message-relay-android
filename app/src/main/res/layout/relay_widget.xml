@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:padding="14dp" android:background="@drawable/widget_bg" android:layout_width="match_parent" android:layout_height="match_parent">
     <TextView android:id="@+id/widget_status" android:text="消息接力运行中" android:textStyle="bold" android:textColor="#FFFFFF" android:textSize="15sp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    <TextView android:id="@+id/widget_recent" android:text="最近：暂无记录" android:textColor="#DDE5FF" android:textSize="11sp" android:layout_marginTop="8dp" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+    <TextView android:id="@+id/widget_recent" android:text="待发送：0 条&#10;最近：暂无记录" android:textColor="#DDE5FF" android:textSize="11sp" android:layout_marginTop="8dp" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
     <Button android:id="@+id/widget_toggle" android:text="暂停" android:textSize="11sp" android:layout_width="match_parent" android:layout_height="42dp"/>
 </LinearLayout>

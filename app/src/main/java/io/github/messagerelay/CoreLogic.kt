@@ -1,5 +1,6 @@
 package io.github.messagerelay
 
+import java.time.Instant
 import java.time.LocalTime
 
 data class RelayMessage(val packageName: String, val app: String, val title: String, val body: String, val time: Long)
@@ -25,7 +26,7 @@ data class MessageTemplate(val title: String = "[{{app}}] {{title}}", val body: 
     fun renderTitle(message: RelayMessage) = render(title, message)
     fun renderBody(message: RelayMessage) = render(body, message)
     private fun render(value: String, message: RelayMessage): String {
-        val data = mapOf("app" to message.app, "title" to message.title, "body" to message.body, "time" to java.time.Instant.ofEpochMilli(message.time).toString())
+        val data = mapOf("app" to message.app, "title" to message.title, "body" to message.body, "time" to Instant.ofEpochMilli(message.time).toString())
         return "\\{\\{(\\w+)}}".toRegex().replace(value) {
             require(it.groupValues[1] in allowed) { "不支持的模板变量：${it.groupValues[1]}" }
             data[it.groupValues[1]].orEmpty()
