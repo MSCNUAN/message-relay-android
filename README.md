@@ -102,6 +102,16 @@ docs/images/cover/message-relay-intro.png
 
 完成以后就可以开始使用，不要求用户会 Linux、Docker，也不需要自己部署服务器。
 
+
+### 📸 首页界面
+
+<!--
+截图：docs/images/screenshots/01-home.png
+建议展示：首页整体、运行状态、推送渠道、软件选择、消息模板、常用设置。
+上传图片后取消下一行注释：
+![消息接力首页](docs/images/screenshots/01-home.png)
+-->
+
 ---
 
 ## 👥 适合哪些用户？
@@ -131,6 +141,17 @@ docs/images/cover/message-relay-intro.png
 
 简单模式下只需要选择和配置主要推送渠道即可。
 
+
+#### 📸 推送渠道界面
+
+<!--
+截图：docs/images/screenshots/02-push-channel.png
+建议展示：Bark、飞书、钉钉以及测试入口。
+⚠️ 必须隐藏真实 Bark Key、Webhook。
+上传图片后取消下一行注释：
+![推送渠道](docs/images/screenshots/02-push-channel.png)
+-->
+
 ### 📩 短信转发
 
 收到短信后，可以将短信内容转发到已经配置的推送渠道。
@@ -150,6 +171,17 @@ docs/images/cover/message-relay-intro.png
 ```
 
 支持识别 SIM / 卡槽信息，并优先显示用户设置的 SIM 名称。
+
+
+#### 📸 短信实际推送效果
+
+<!--
+截图：docs/images/screenshots/03-sms-push.png
+建议展示：短信号码、正文、来自、卡槽、接收时间。
+请使用测试短信或脱敏号码/验证码。
+上传图片后取消下一行注释：
+![短信实际推送效果](docs/images/screenshots/03-sms-push.png)
+-->
 
 ### 📞 电话通知
 
@@ -179,6 +211,26 @@ docs/images/cover/message-relay-intro.png
 > 电话号码、联系人和归属地能否在“响铃阶段”立即获取，会受到 Android 版本、手机厂商电话框架以及系统 API 的限制。  
 > 某些设备可能需要在通话结束后才能从系统通话记录中补全更多信息。
 
+
+#### 📸 电话设置
+
+<!--
+截图：docs/images/screenshots/04-call-settings.png
+建议展示：来电提醒、来电接通、未接来电、仅锁屏时推送。
+上传图片后取消下一行注释：
+![电话设置](docs/images/screenshots/04-call-settings.png)
+-->
+
+#### 📸 电话实际推送效果
+
+<!--
+截图：docs/images/screenshots/05-call-push.png
+建议展示：号码、来自、归属地、卡槽、提醒类型、接收时间。
+请使用测试号码或脱敏数据。
+上传图片后取消下一行注释：
+![电话实际推送效果](docs/images/screenshots/05-call-push.png)
+-->
+
 ### 💬 APP 通知转发
 
 可选择微信以及其他安装在手机上的 APP。
@@ -197,6 +249,26 @@ docs/images/cover/message-relay-intro.png
 
 > 微信联系人、群聊名称等信息是否能够识别，取决于微信当前版本实际写入 Android 通知的数据。
 
+
+#### 📸 软件选择界面
+
+<!--
+截图：docs/images/screenshots/06-app-selection.png
+建议展示：短信、电话、微信、其他应用、搜索入口。
+上传图片后取消下一行注释：
+![软件选择](docs/images/screenshots/06-app-selection.png)
+-->
+
+#### 📸 APP 实际推送效果
+
+<!--
+截图：docs/images/screenshots/07-app-push.png
+建议使用微信测试通知，展示 APP 名称、精简正文、接收时间。
+请隐藏真实联系人、群聊名称和私人消息。
+上传图片后取消下一行注释：
+![APP实际推送效果](docs/images/screenshots/07-app-push.png)
+-->
+
 ### 🔒 仅锁屏时推送
 
 每个 APP 可以单独开启：
@@ -212,6 +284,16 @@ docs/images/cover/message-relay-intro.png
 - 手机已经解锁并正在使用：不转发；
 - 被过滤的旧消息不会在之后锁屏时补发。
 
+
+#### 📸 仅锁屏时推送
+
+<!--
+截图：docs/images/screenshots/08-locked-only.png
+建议展示：某个 APP 的“仅锁屏时推送”开关与说明。
+上传图片后取消下一行注释：
+![仅锁屏时推送](docs/images/screenshots/08-locked-only.png)
+-->
+
 ### 📲 双卡与 SIM 名称
 
 支持识别设备中的 SIM，并允许给 SIM 设置更容易理解的本地名称，例如：
@@ -220,6 +302,17 @@ docs/images/cover/message-relay-intro.png
 SIM 1 → 工作卡
 SIM 2 → 生活卡
 ```
+
+
+#### 📸 SIM 管理
+
+<!--
+截图：docs/images/screenshots/09-sim-management.png
+建议展示：SIM 1 / SIM 2、系统名称和自定义名称。
+⚠️ 不要展示 ICCID、完整手机号等敏感标识。
+上传图片后取消下一行注释：
+![SIM管理](docs/images/screenshots/09-sim-management.png)
+-->
 
 ### 🌙 免打扰
 
@@ -231,6 +324,16 @@ SIM 2 → 生活卡
 
 可以保留验证码、来电、未接来电等重要消息例外。
 
+
+#### 📸 免打扰设置
+
+<!--
+截图：docs/images/screenshots/10-dnd.png
+建议展示：开始时间、结束时间、重要消息例外。
+上传图片后取消下一行注释：
+![免打扰](docs/images/screenshots/10-dnd.png)
+-->
+
 ### 📝 消息模板
 
 内置多种模板：
@@ -241,6 +344,16 @@ SIM 2 → 生活卡
 - 原始通知
 
 模板页面提供预览，尽量保证预览效果与实际推送结果一致。
+
+
+#### 📸 消息模板与预览
+
+<!--
+截图：docs/images/screenshots/11-message-template.png
+建议展示：简洁 / 标准 / 隐私 / 原始通知，以及 APP / 短信 / 电话预览。
+上传图片后取消下一行注释：
+![消息模板](docs/images/screenshots/11-message-template.png)
+-->
 
 ### 🧾 转发记录
 
@@ -259,12 +372,33 @@ SIM 2 → 生活卡
 - 永久
 - 仅保存状态
 
+
+#### 📸 转发记录
+
+<!--
+截图：docs/images/screenshots/12-history.png
+建议展示：全部、成功、失败、已过滤四个标签以及精简记录卡片。
+使用测试/脱敏数据。
+上传图片后取消下一行注释：
+![转发记录](docs/images/screenshots/12-history.png)
+-->
+
 ### 💾 备份与恢复
 
 支持导出和恢复应用配置，包括推送渠道、软件选择、模板、免打扰、记录策略和 SIM 自定义名称等。
 
 > [!WARNING]
 > 备份文件可能包含 Bark 凭证、飞书 / 钉钉 Webhook 或历史消息等敏感内容，请勿公开上传。
+
+
+#### 📸 备份与恢复
+
+<!--
+截图：docs/images/screenshots/13-backup.png
+建议展示：导出、导入、隐私提醒。
+上传图片后取消下一行注释：
+![备份与恢复](docs/images/screenshots/13-backup.png)
+-->
 
 ### 🛠️ 后台运行检查
 
@@ -277,6 +411,16 @@ SIM 2 → 生活卡
 - 后台运行状态
 
 部分厂商的“自启动”“锁定后台”等设置无法通过 Android 通用 API 可靠自动判断，需要用户按照系统界面手动确认。
+
+
+#### 📸 后台运行检查
+
+<!--
+截图：docs/images/screenshots/14-background-check.png
+建议展示：通知使用权、电话权限、电池优化、后台运行状态。
+上传图片后取消下一行注释：
+![后台运行检查](docs/images/screenshots/14-background-check.png)
+-->
 
 ---
 
@@ -336,230 +480,35 @@ docs/images/advantages/pros-and-cons.png
 
 ---
 
-## 📸 软件截图
 
-下面已经把 README 需要的截图全部列出来。  
-截图上传前请务必隐藏真实电话号码、验证码、联系人姓名、Bark Key、Webhook、SIM 标识等敏感信息。
+## 🖼️ README 图片清单
 
-### 01. 首页
+这版 README 已经把**软件截图分散插入到对应功能介绍中**，不会再把所有截图集中堆在文章后面。
 
-<!--
-路径：docs/images/screenshots/01-home.png
-需要拍到：
-- 首页整体
-- 当前运行/权限状态
-- 推送渠道
-- 软件选择
-- 消息模板
-- 常用设置卡片
--->
-<!-- ![首页](docs/images/screenshots/01-home.png) -->
+最终准备以下图片即可：
 
-### 02. 推送渠道
-
-<!--
-路径：docs/images/screenshots/02-push-channel.png
-需要拍到：
-- Bark
-- 飞书
-- 钉钉
-- 渠道状态/测试入口
-注意：必须隐藏真实 Token / Webhook
--->
-<!-- ![推送渠道](docs/images/screenshots/02-push-channel.png) -->
-
-### 03. 软件选择
-
-<!--
-路径：docs/images/screenshots/03-app-selection.png
-需要拍到：
-- 短信
-- 电话
-- 微信
-- 其他应用
-- 推荐区 + 搜索
--->
-<!-- ![软件选择](docs/images/screenshots/03-app-selection.png) -->
-
-### 04. 仅锁屏时推送
-
-<!--
-路径：docs/images/screenshots/04-locked-only.png
-需要拍到：
-- 某个 APP 的设置页
-- “仅锁屏时推送”开关
-- 对应说明
--->
-<!-- ![仅锁屏时推送](docs/images/screenshots/04-locked-only.png) -->
-
-### 05. 消息模板
-
-<!--
-路径：docs/images/screenshots/05-message-template.png
-需要拍到：
-- 简洁 / 标准 / 隐私 / 原始通知
-- 模板预览
--->
-<!-- ![消息模板](docs/images/screenshots/05-message-template.png) -->
-
-### 06. APP 推送效果
-
-<!--
-路径：docs/images/screenshots/06-app-push.png
-需要拍到：
-- Bark 或飞书最终收到的 APP 通知
-- 最好用微信测试消息
-- 联系人/正文请使用测试数据或打码
--->
-<!-- ![APP推送效果](docs/images/screenshots/06-app-push.png) -->
-
-### 07. 短信推送效果
-
-<!--
-路径：docs/images/screenshots/07-sms-push.png
-需要拍到：
-- 最终收到的短信推送
-- 号码
-- 正文
-- 来自
-- 卡槽
-- 接收时间
-全部使用测试数据/脱敏数据
--->
-<!-- ![短信推送效果](docs/images/screenshots/07-sms-push.png) -->
-
-### 08. 电话推送效果
-
-<!--
-路径：docs/images/screenshots/08-call-push.png
-需要拍到：
-- 电话号码
-- 来自
-- 归属地
-- 卡槽
-- 提醒类型
-- 接收时间
-使用测试/脱敏号码
--->
-<!-- ![电话推送效果](docs/images/screenshots/08-call-push.png) -->
-
-### 09. 转发记录
-
-<!--
-路径：docs/images/screenshots/09-history.png
-需要拍到：
-- 全部
-- 成功
-- 失败
-- 已过滤
-- 简洁记录卡片
--->
-<!-- ![转发记录](docs/images/screenshots/09-history.png) -->
-
-### 10. 电话设置
-
-<!--
-路径：docs/images/screenshots/10-call-settings.png
-需要拍到：
-- 来电提醒
-- 来电接通
-- 未接来电
-- 仅锁屏时推送
--->
-<!-- ![电话设置](docs/images/screenshots/10-call-settings.png) -->
-
-### 11. SIM 管理
-
-<!--
-路径：docs/images/screenshots/11-sim-management.png
-需要拍到：
-- SIM 1 / SIM 2
-- 自定义名称
-注意：不要展示原始 ICCID 等敏感标识
--->
-<!-- ![SIM管理](docs/images/screenshots/11-sim-management.png) -->
-
-### 12. 免打扰
-
-<!--
-路径：docs/images/screenshots/12-dnd.png
-需要拍到：
-- 开始/结束时间
-- 重要消息例外
--->
-<!-- ![免打扰](docs/images/screenshots/12-dnd.png) -->
-
-### 13. 后台运行检查
-
-<!--
-路径：docs/images/screenshots/13-background-check.png
-需要拍到：
-- 权限状态
-- 电池优化
-- 后台提示
-不要展示设备隐私信息
--->
-<!-- ![后台运行检查](docs/images/screenshots/13-background-check.png) -->
-
-### 14. 备份与恢复
-
-<!--
-路径：docs/images/screenshots/14-backup.png
-需要拍到：
-- 导出
-- 导入
-- 隐私提醒
--->
-<!-- ![备份与恢复](docs/images/screenshots/14-backup.png) -->
-
-### 15. 设置页 / 深色模式
-
-<!--
-路径：docs/images/screenshots/15-settings-dark.png
-需要拍到：
-- 设置页整体
-- 最好使用深色模式
--->
-<!-- ![设置页深色模式](docs/images/screenshots/15-settings-dark.png) -->
-
----
-
-## 🖼️ 截图清单速查
-
-最终建议至少准备 **17 张图片**：
-
-| 编号 | 文件 | 用途 |
+| 图片 | 文件路径 | 对应文章位置 |
 |---|---|---|
-| 01 | `docs/images/cover/message-relay-intro.png` | README 开头项目介绍主视觉 |
-| 02 | `docs/images/advantages/pros-and-cons.png` | 项目优缺点信息图 |
-| 03 | `docs/images/screenshots/01-home.png` | 首页 |
-| 04 | `docs/images/screenshots/02-push-channel.png` | 推送渠道 |
-| 05 | `docs/images/screenshots/03-app-selection.png` | 软件选择 |
-| 06 | `docs/images/screenshots/04-locked-only.png` | 仅锁屏时推送 |
-| 07 | `docs/images/screenshots/05-message-template.png` | 消息模板 |
-| 08 | `docs/images/screenshots/06-app-push.png` | APP 实际推送效果 |
-| 09 | `docs/images/screenshots/07-sms-push.png` | 短信实际推送效果 |
-| 10 | `docs/images/screenshots/08-call-push.png` | 电话实际推送效果 |
-| 11 | `docs/images/screenshots/09-history.png` | 转发记录 |
-| 12 | `docs/images/screenshots/10-call-settings.png` | 电话设置 |
-| 13 | `docs/images/screenshots/11-sim-management.png` | SIM 管理 |
-| 14 | `docs/images/screenshots/12-dnd.png` | 免打扰 |
-| 15 | `docs/images/screenshots/13-background-check.png` | 后台运行检查 |
-| 16 | `docs/images/screenshots/14-backup.png` | 备份与恢复 |
-| 17 | `docs/images/screenshots/15-settings-dark.png` | 设置页/深色模式 |
+| 项目介绍图 | `docs/images/cover/message-relay-intro.png` | README 开头 |
+| 项目优缺点图 | `docs/images/advantages/pros-and-cons.png` | 项目优缺点 |
+| 首页 | `docs/images/screenshots/01-home.png` | 项目介绍 / 使用流程后 |
+| 推送渠道 | `docs/images/screenshots/02-push-channel.png` | 多种推送渠道 |
+| 短信推送 | `docs/images/screenshots/03-sms-push.png` | 短信转发 |
+| 电话设置 | `docs/images/screenshots/04-call-settings.png` | 电话通知 |
+| 电话推送 | `docs/images/screenshots/05-call-push.png` | 电话通知 |
+| 软件选择 | `docs/images/screenshots/06-app-selection.png` | APP 通知转发 |
+| APP 推送 | `docs/images/screenshots/07-app-push.png` | APP 通知转发 |
+| 仅锁屏 | `docs/images/screenshots/08-locked-only.png` | 仅锁屏时推送 |
+| SIM 管理 | `docs/images/screenshots/09-sim-management.png` | 双卡与 SIM |
+| 免打扰 | `docs/images/screenshots/10-dnd.png` | 免打扰 |
+| 消息模板 | `docs/images/screenshots/11-message-template.png` | 消息模板 |
+| 转发记录 | `docs/images/screenshots/12-history.png` | 转发记录 |
+| 备份恢复 | `docs/images/screenshots/13-backup.png` | 备份与恢复 |
+| 后台检查 | `docs/images/screenshots/14-background-check.png` | 后台运行检查 |
+| 设置 / 深色 | `docs/images/screenshots/15-settings-dark.png` | 设计思路 |
 
-其中最重要、建议优先准备的 **8 张**：
+> 每个图片位置都已经写好 Markdown 注释。图片准备好后，把文件放到对应目录，再取消该位置 `![...](...)` 的注释即可。
 
-```text
-message-relay-intro.png
-pros-and-cons.png
-01-home.png
-02-push-channel.png
-03-app-selection.png
-06-app-push.png
-07-sms-push.png
-08-call-push.png
-```
 
 ---
 
@@ -662,6 +611,16 @@ pros-and-cons.png
 ### 4. 出错尽量说人话
 
 尽可能把技术错误转换成普通用户能理解的中文提示。
+
+
+### 📸 设置页 / 深色模式
+
+<!--
+截图：docs/images/screenshots/15-settings-dark.png
+建议展示：设置页整体结构，并使用深色模式展示 Material 3 适配效果。
+上传图片后取消下一行注释：
+![设置页深色模式](docs/images/screenshots/15-settings-dark.png)
+-->
 
 ---
 
