@@ -24,6 +24,8 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 ---
 
 
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810093125635.png)
+
 > [!IMPORTANT]
 > **关于本项目**
 >
@@ -81,17 +83,12 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 4. 按照提示开启必要权限；
 5. 发送测试消息。
 
-完成以后就可以开始使用，不要求用户会 Linux、Docker，也不需要自己部署服务器。
+完成以后就可以开始使用
 
 
 ### 📸 首页界面
 
-<!--
-截图：docs/images/screenshots/01-home.png
-建议展示：首页整体、运行状态、推送渠道、软件选择、消息模板、常用设置。
-上传图片后取消下一行注释：
-![消息接力首页](docs/images/screenshots/01-home.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810093850790.jpg)
 
 ---
 
@@ -125,13 +122,7 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 
 #### 📸 推送渠道界面
 
-<!--
-截图：docs/images/screenshots/02-push-channel.png
-建议展示：Bark、飞书、钉钉以及测试入口。
-⚠️ 必须隐藏真实 Bark Key、Webhook。
-上传图片后取消下一行注释：
-![推送渠道](docs/images/screenshots/02-push-channel.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810103306144.jpg)
 
 ### 📩 短信转发
 
@@ -156,13 +147,7 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 
 #### 📸 短信实际推送效果
 
-<!--
-截图：docs/images/screenshots/03-sms-push.png
-建议展示：短信号码、正文、来自、卡槽、接收时间。
-请使用测试短信或脱敏号码/验证码。
-上传图片后取消下一行注释：
-![短信实际推送效果](docs/images/screenshots/03-sms-push.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810094412628.jpg)
 
 ### 📞 电话通知
 
@@ -175,7 +160,7 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 默认展示方向：
 
 ```text
-13248361507
+13423876512
 
 来自：张三
 
@@ -195,22 +180,11 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 
 #### 📸 电话设置
 
-<!--
-截图：docs/images/screenshots/04-call-settings.png
-建议展示：来电提醒、来电接通、未接来电、仅锁屏时推送。
-上传图片后取消下一行注释：
-![电话设置](docs/images/screenshots/04-call-settings.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810103410032.jpg)
 
 #### 📸 电话实际推送效果
 
-<!--
-截图：docs/images/screenshots/05-call-push.png
-建议展示：号码、来自、归属地、卡槽、提醒类型、接收时间。
-请使用测试号码或脱敏数据。
-上传图片后取消下一行注释：
-![电话实际推送效果](docs/images/screenshots/05-call-push.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810104033765.jpg)
 
 ### 💬 APP 通知转发
 
@@ -233,22 +207,11 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 
 #### 📸 软件选择界面
 
-<!--
-截图：docs/images/screenshots/06-app-selection.png
-建议展示：短信、电话、微信、其他应用、搜索入口。
-上传图片后取消下一行注释：
-![软件选择](docs/images/screenshots/06-app-selection.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810104438164.jpg)
 
 #### 📸 APP 实际推送效果
 
-<!--
-截图：docs/images/screenshots/07-app-push.png
-建议使用微信测试通知，展示 APP 名称、精简正文、接收时间。
-请隐藏真实联系人、群聊名称和私人消息。
-上传图片后取消下一行注释：
-![APP实际推送效果](docs/images/screenshots/07-app-push.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810104648687.jpg)
 
 ### 🔒 仅锁屏时推送
 
@@ -266,14 +229,6 @@ README 中所有图片均使用 GitHub 支持的仓库相对路径，方便后�
 - 被过滤的旧消息不会在之后锁屏时补发。
 
 
-#### 📸 仅锁屏时推送
-
-<!--
-截图：docs/images/screenshots/08-locked-only.png
-建议展示：某个 APP 的“仅锁屏时推送”开关与说明。
-上传图片后取消下一行注释：
-![仅锁屏时推送](docs/images/screenshots/08-locked-only.png)
--->
 
 ### 📲 双卡与 SIM 名称
 
@@ -287,13 +242,7 @@ SIM 2 → 生活卡
 
 #### 📸 SIM 管理
 
-<!--
-截图：docs/images/screenshots/09-sim-management.png
-建议展示：SIM 1 / SIM 2、系统名称和自定义名称。
-⚠️ 不要展示 ICCID、完整手机号等敏感标识。
-上传图片后取消下一行注释：
-![SIM管理](docs/images/screenshots/09-sim-management.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810103101264.jpg)
 
 ### 🌙 免打扰
 
@@ -308,12 +257,7 @@ SIM 2 → 生活卡
 
 #### 📸 免打扰设置
 
-<!--
-截图：docs/images/screenshots/10-dnd.png
-建议展示：开始时间、结束时间、重要消息例外。
-上传图片后取消下一行注释：
-![免打扰](docs/images/screenshots/10-dnd.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810102455776.jpg)
 
 ### 📝 消息模板
 
@@ -329,12 +273,7 @@ SIM 2 → 生活卡
 
 #### 📸 消息模板与预览
 
-<!--
-截图：docs/images/screenshots/11-message-template.png
-建议展示：简洁 / 标准 / 隐私 / 原始通知，以及 APP / 短信 / 电话预览。
-上传图片后取消下一行注释：
-![消息模板](docs/images/screenshots/11-message-template.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810102118043.jpg)
 
 ### 🧾 转发记录
 
@@ -356,30 +295,17 @@ SIM 2 → 生活卡
 
 #### 📸 转发记录
 
-<!--
-截图：docs/images/screenshots/12-history.png
-建议展示：全部、成功、失败、已过滤四个标签以及精简记录卡片。
-使用测试/脱敏数据。
-上传图片后取消下一行注释：
-![转发记录](docs/images/screenshots/12-history.png)
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810105134938.jpg)
 -->
 
 ### 💾 备份与恢复
 
-支持导出和恢复应用配置，包括推送渠道、软件选择、模板、免打扰、记录策略和 SIM 自定义名称等。
 
-> [!WARNING]
-> 备份文件可能包含 Bark 凭证、飞书 / 钉钉 Webhook 或历史消息等敏感内容，请勿公开上传。
 
 
 #### 📸 备份与恢复
 
-<!--
-截图：docs/images/screenshots/13-backup.png
-建议展示：导出、导入、隐私提醒。
-上传图片后取消下一行注释：
-![备份与恢复](docs/images/screenshots/13-backup.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810100051189.jpg)
 
 ### 🛠️ 后台运行检查
 
@@ -396,47 +322,13 @@ SIM 2 → 生活卡
 
 #### 📸 后台运行检查
 
-<!--
-截图：docs/images/screenshots/14-background-check.png
-建议展示：通知使用权、电话权限、电池优化、后台运行状态。
-上传图片后取消下一行注释：
-![后台运行检查](docs/images/screenshots/14-background-check.png)
--->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810100244068.jpg)
 
 ---
 
 ## ⚖️ 项目优缺点
 
-<!-- =========================================================================
-【图片 02：项目优缺点图】
-请将最终优缺点图片保存为：
-docs/images/advantages/pros-and-cons.png
-
-推荐尺寸：
-1600 × 900 px 或 1920 × 1080 px
-
-建议做成左右双栏：
-左：优点
-- 小白友好
-- 无需自建服务器
-- Bark / 飞书 / 钉钉
-- 短信 / 电话 / APP 通知
-- 简洁模板
-- 仅锁屏推送
-- 双卡 SIM
-- 备份与记录
-
-右：限制
-- Android 厂商后台差异
-- 微信联系人/群名取决于通知字段
-- 来电实时号码受系统 API 限制
-- 电话归属地可能无法实时取得
-- 不同 ROM 需要真机适配
-- AI/Codex 辅助开发，可能存在 Bug
-
-插入图片后，将下面这一行取消注释：
-![消息接力项目优缺点](docs/images/advantages/pros-and-cons.png)
-========================================================================= -->
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810095910667.png)
 
 ### ✅ 优点
 
