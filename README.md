@@ -41,7 +41,7 @@ docs/images/cover/message-relay-intro.png
 
 插入图片后，将下面这一行取消注释：
 ![消息接力项目介绍图](docs/images/cover/message-relay-intro.png)
-========================================================================= -->
+
 
 > [!IMPORTANT]
 > **关于本项目**
