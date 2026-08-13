@@ -1,7 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <application android:theme="@style/Theme.MessageRelay" android:label="消息接力" android:allowBackup="false">
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+    <application android:theme="@style/Theme.MessageRelay" android:label="消息接力" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -14,6 +21,15 @@
         <receiver android:name=".RelayWidget" android:exported="true">
             <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/relay_widget"/>
+        </receiver>
+        <receiver android:name=".PhoneStateReceiver" android:exported="true">
+            <intent-filter><action android:name="android.intent.action.PHONE_STATE"/></intent-filter>
+        </receiver>
+        <service android:name=".RelayCallScreeningService" android:permission="android.permission.BIND_SCREENING_SERVICE" android:exported="true">
+            <intent-filter><action android:name="android.telecom.CallScreeningService"/></intent-filter>
+        </service>
+        <receiver android:name=".SmsReceiver" android:exported="true">
+            <intent-filter><action android:name="android.provider.Telephony.SMS_RECEIVED"/></intent-filter>
         </receiver>
     </application>
 </manifest>

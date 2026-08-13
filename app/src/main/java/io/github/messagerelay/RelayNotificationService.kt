@@ -39,12 +39,16 @@ class RelayNotificationService : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         if (sbn.packageName == packageName) return
-        val extras = sbn.notification.extras
-        val title = extras.getCharSequence("android.title")?.toString().orEmpty()
-        val body = extras.getCharSequence("android.text")?.toString().orEmpty()
-        if (title.isBlank() && body.isBlank()) return
+        val content = if (sbn.packageName == "com.tencent.mm") {
+            WeChatNotificationParser.parse(sbn)
+        } else {
+            NotificationContentExtractor.extract(sbn)
+        }
+        if (content.title.isBlank() && content.body.isBlank()) return
         val app = runCatching { packageManager.getApplicationLabel(packageManager.getApplicationInfo(sbn.packageName, 0)).toString() }.getOrDefault(sbn.packageName)
-        scope.launch { RelayEngine.process(applicationContext, RelayMessage(sbn.packageName, app, title, body, sbn.postTime)) }
+        if (SmsDuplicateGuard.shouldSuppressNotification(sbn.packageName, content.title, content.body, sbn.postTime)) return
+        val relayApp = if (sbn.packageName == "com.tencent.mm" && content.title.startsWith("微信 · ")) content.title else app
+        scope.launch { RelayEngine.process(applicationContext, RelayMessage(sbn.packageName, relayApp, content.title, content.body, sbn.postTime)) }
     }
 
     override fun onDestroy() {

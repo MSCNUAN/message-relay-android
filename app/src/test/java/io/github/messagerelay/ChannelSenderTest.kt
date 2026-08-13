@@ -50,4 +50,20 @@ class ChannelSenderTest {
         assertEquals(429, result.httpStatus)
         assertTrue(result.retryable)
     }
+
+    @Test fun `bark http success still checks api code`() {
+        server.enqueue(MockResponse().setResponseCode(200).setBody("""{"code":400,"message":"bad device key"}"""))
+        val result = ChannelSender.send(ChannelConfig("bark", server.url("/token").toString()), "标题", "正文")
+        assertFalse(result.success)
+        assertEquals(200, result.httpStatus)
+        assertTrue(result.error.orEmpty().contains("Bark 返回错误"))
+    }
+
+    @Test fun `feishu http success still checks response code`() {
+        server.enqueue(MockResponse().setResponseCode(200).setBody("""{"code":9499,"msg":"sign error"}"""))
+        val result = ChannelSender.send(ChannelConfig("feishu", server.url("/hook").toString()), "标题", "正文")
+        assertFalse(result.success)
+        assertEquals(200, result.httpStatus)
+        assertTrue(result.error.orEmpty().contains("飞书返回错误"))
+    }
 }

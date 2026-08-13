@@ -12,15 +12,28 @@ data class TemplateDefinition(
 
 object TemplateCatalog {
     const val GENERAL_ID = "general"
+    const val STANDARD_ID = "standard"
+
+    private const val APP_TITLE = "{{appName}}"
+    private const val APP_BODY = "📝：内容：{{notificationBody}}\n\n🕒：接收时间：{{receivedLocalTime}}"
+    private const val PHONE_TITLE = "{{phoneNumber}}"
+    private const val PHONE_BODY = "来自：{{fromLabel}}\n\n📍 归属地：{{phoneLocation}}\n\n📲 卡槽：{{simDisplayName}}\n\n🔔 提醒：{{callEventLabel}}\n\n🕒 接收时间：{{receivedLocalTime}}"
+    private const val SMS_TITLE = "{{smsNumber}}"
+    private const val SMS_BODY = "{{smsBody}}\n\n📩 来自：{{smsNumber}}\n\n📲 卡槽：{{simDisplayName}}\n\n🕒 接收时间：{{receivedLocalTime}}"
+
     val builtIns = listOf(
-        TemplateDefinition(GENERAL_ID, "通用", "[{{app}}] {{title}}"),
-        TemplateDefinition("phone", "电话", "来电提醒：{{title}}"),
-        TemplateDefinition("sms", "短信", "短信：{{title}}"),
-        TemplateDefinition("wechat", "微信", "{{app}} · {{title}}"),
-        TemplateDefinition("work_wechat", "企业微信", "{{app}} · {{title}}"),
-        TemplateDefinition("qq", "QQ", "{{app}} · {{title}}"),
-        TemplateDefinition("dingtalk", "钉钉", "{{app}} · {{title}}"),
-        TemplateDefinition("feishu", "飞书", "{{app}} · {{title}}")
+        TemplateDefinition(GENERAL_ID, "通用模板", APP_TITLE, APP_BODY),
+        TemplateDefinition("simple", "简洁模板", APP_TITLE, APP_BODY),
+        TemplateDefinition(STANDARD_ID, "标准模板", APP_TITLE, APP_BODY),
+        TemplateDefinition("privacy", "隐私模板", APP_TITLE, APP_BODY),
+        TemplateDefinition("raw", "原始通知模板", APP_TITLE, APP_BODY),
+        TemplateDefinition("phone", "电话", PHONE_TITLE, PHONE_BODY),
+        TemplateDefinition("sms", "短信", SMS_TITLE, SMS_BODY),
+        TemplateDefinition("wechat", "微信", APP_TITLE, APP_BODY),
+        TemplateDefinition("work_wechat", "企业微信", APP_TITLE, APP_BODY),
+        TemplateDefinition("qq", "App 通知", APP_TITLE, APP_BODY),
+        TemplateDefinition("dingtalk", "App 通知", APP_TITLE, APP_BODY),
+        TemplateDefinition("feishu", "App 通知", APP_TITLE, APP_BODY)
     )
 
     fun byId(id: String) = builtIns.firstOrNull { it.id == id } ?: builtIns.first()
@@ -48,6 +61,31 @@ object SelectedSources {
 }
 
 object ChannelSelection {
+    const val NO_BARK_TARGETS = "__none__"
+
+    fun normalized(channels: List<ChannelConfig>): List<ChannelConfig> {
+        val normalized = channels.mapIndexed { index, channel -> channel.normalized(index) }
+        val bark = normalized.filter { it.type == "bark" && it.url.isNotBlank() }
+        val dingtalk = normalized.firstOrNull { it.type == "dingtalk" && it.url.isNotBlank() }?.let(::listOf).orEmpty()
+        val feishu = normalized.firstOrNull { it.type == "feishu" && it.url.isNotBlank() }?.let(::listOf).orEmpty()
+        return dingtalk + feishu + bark
+    }
+
+    fun enabled(channels: List<ChannelConfig>, barkTargetIds: String = ""): List<ChannelConfig> {
+        val active = normalized(channels).filter(ChannelConfig::enabled)
+        val selectedBarkIds = barkTargetIds.lines().map(String::trim).filter(String::isNotBlank).toSet()
+        val noBarkTargets = NO_BARK_TARGETS in selectedBarkIds
+        return active.filter { channel ->
+            channel.type != "bark" || (!noBarkTargets && (selectedBarkIds.isEmpty() || channel.id in selectedBarkIds))
+        }
+    }
+
+    fun primaryEnabled(channels: List<ChannelConfig>, primaryChannelId: String, barkTargetIds: String = ""): List<ChannelConfig> {
+        val candidates = enabled(channels, barkTargetIds)
+        val primary = candidates.firstOrNull { it.id == primaryChannelId } ?: candidates.firstOrNull()
+        return primary?.let { listOf(it.copy(enabled = true)) }.orEmpty()
+    }
+
     fun singleEnabled(channels: List<ChannelConfig>): List<ChannelConfig> =
-        channels.firstOrNull(ChannelConfig::enabled)?.let { listOf(it.copy(enabled = true)) }.orEmpty()
+        enabled(channels).firstOrNull()?.let { listOf(it.copy(enabled = true)) }.orEmpty()
 }

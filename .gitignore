@@ -1,0 +1,46 @@
+# Gradle / Android build output
+.gradle/
+.kotlin/
+build/
+**/build/
+
+# Local IDE state
+.idea/
+*.iml
+
+# Local Android configuration
+local.properties
+
+# Signing and secrets
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+secrets.properties
+.env
+.env.*
+
+# Logs and temporary files
+*.log
+*.bak
+*.tmp
+
+# Local QA, exports, backups, and diagnostics
+outputs/
+qa-round*/
+backup/
+backups/
+diagnostics/
+screenshots-private/
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# APK/AAB artifacts should be attached to GitHub Releases, not committed.
+*.apk
+*.aab
+
+# Decompiled or extracted build leftovers
+classes*.dex
