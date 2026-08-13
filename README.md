@@ -1,61 +1,374 @@
-# 消息接力 Message Relay
+<div align="center">
 
-开源 Android 通知转发工具。它可以把你选择的短信、微信、电话和其他 App 通知，在本机完成筛选和模板渲染后，转发到 Bark、飞书或钉钉。
+# 📲 消息接力 Message Relay
 
-仓库地址：[https://github.com/MSCNUAN/message-relay-android](https://github.com/MSCNUAN/message-relay-android)
+### 不用服务器、不用写代码，几步设置，把安卓手机的重要消息同步到你常用的设备。
 
-![Android](https://img.shields.io/badge/Android-8.0%2B-3DDC84)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.2.10-7F52FF)
-![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4)
-![Status](https://img.shields.io/badge/status-v0.1.3%20Beta-orange)
-![License](https://img.shields.io/badge/license-GPL--3.0--only-blue)
+一款面向小白用户的开源 Android 消息转发工具。  
+支持将 **短信、微信 / APP 通知、电话事件** 等消息，在本机完成筛选和模板渲染后转发到 **Bark、飞书、钉钉**。
 
-## 小白也能上手
+[![Android](https://img.shields.io/badge/Android-8.0%2B-3DDC84)](https://www.android.com/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.2.10-7F52FF)](https://kotlinlang.org/)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4)](https://developer.android.com/compose)
+[![Status](https://img.shields.io/badge/status-v0.1.3%20Beta-orange)](https://github.com/MSCNUAN/message-relay-android/releases)
+[![License](https://img.shields.io/badge/license-GPL--3.0--only-blue)](LICENSE)
 
-App 使用 `首页 / 记录 / 设置` 三页结构。第一次使用只需要按首页提示完成三件事：
+**[GitHub 仓库](https://github.com/MSCNUAN/message-relay-android)** ·
+**[Releases](https://github.com/MSCNUAN/message-relay-android/releases)** ·
+**[Issues](https://github.com/MSCNUAN/message-relay-android/issues)**
 
-1. 配置推送渠道：Bark、飞书、钉钉任选一种作为主渠道。
-2. 选择要转发的软件：例如短信、微信、电话。
-3. 选择消息模板：内置模板可以直接预览和测试。
+</div>
 
-如果已经配置好飞书或钉钉，并且所有设备都能看到同一个机器人消息或群聊，就可以借助飞书/钉钉自己的多端同步能力，在电脑、平板和其他手机上接收转发消息。
+---
 
-## 核心功能
 
-- Bark、飞书、钉钉推送渠道。
-- 多个 Bark 设备配置，支持 Bark 名称、声音、图标 URL、分组、提醒等级和持续响铃参数。
-- Bark 设备可绑定 App：某个 App 可指定只发到某几个 Bark，未绑定时走主渠道或高级多渠道规则。
-- 来源应用选择、关键词包含/排除、每应用模板、每应用仅息屏时推送。
-- 电话通知类型：未接来电、来电提醒、来电已接通。
-- 短信验证码关键词筛选。
-- 四套简单模板：简洁、标准、隐私、原始通知。
-- 高级自定义模板、关键词过滤、应用独立规则。
-- 免打扰、重要关键词例外、发送延迟、通知合并、自动重试。
-- 转发记录、失败重试、仍然发送、复制、删除和诊断。
-- 基础配置备份与恢复。
-- 深色 / 浅色 / 跟随系统主题。
-- 内置使用教程、更新日志、关于页和 GitHub Releases 版本更新检查。
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810093125635.png)
 
-## 当前版本
+> [!IMPORTANT]
+> **关于本项目**
+>
+> 本工具全程使用 **OpenAI Codex** 协助创作与开发，从需求梳理、界面调整到代码实现、测试和 Bug 修复均大量借助 AI 完成。
+>
+> AI 生成的代码难免会存在遗漏、兼容性问题或 Bug，因此本项目仍需要持续真机测试与完善。  
+> 如果你在使用过程中发现问题，欢迎通过 GitHub Issues 反馈，并尽量附上设备型号、Android 版本、复现步骤和脱敏后的日志。
 
-- applicationId：`io.github.messagerelay`
-- versionName：`0.1.3`
-- versionCode：`4`
-- minSdk：`26`
-- targetSdk：`36`
+---
 
-当前仍是 Beta 测试版。电话、双卡、AOD/Doze、厂商后台保活和真实公网推送送达，建议在自己的真机上继续回归。
+## 🚨 当前已知 Bug
 
-## GitHub 更新检查
+> [!WARNING]
+> **正式使用前请先了解以下已知问题。**
+>
+> 目前已经确认的 Bug：
+>
+> 1. **电话来电提醒阶段可能不会显示号码、联系人和归属地**  
+>    当前部分设备在“正在来电”阶段只能识别到来电事件，号码、联系人和归属地可能显示为空或未知；**挂断 / 通话结束后**，应用通常可以通过系统通话记录补全这些信息。
+>
+> 2. **所有消息的推送时间可能会重复显示两次**  
+>    APP、短信、电话等部分推送中，接收时间可能出现重复。该问题属于展示层 Bug，不影响消息本身的接收和转发。
+>
+> 以上是目前已经确认的问题，后续会继续修复。  
+> 如果你发现其他 Bug、兼容问题或某个品牌手机上的异常，欢迎到 **[TG 聊天室](https://t.me/MSC4652)** 反馈。
+>
+> 提交问题时建议附上：手机型号、Android / 系统版本、消息接力版本、复现步骤和脱敏截图。请勿公开 Bark Key、Webhook、验证码、真实电话号码等敏感信息。
 
-App 内置 `设置 -> 帮助与关于 -> 版本更新` 页面：
 
-- 当前版本读取 `BuildConfig.VERSION_NAME` 和 `BuildConfig.VERSION_CODE`。
-- 默认开启自动检查更新，最多每 24 小时请求一次 GitHub Releases。
-- 用户可以关闭自动检查；关闭后启动 App 不会主动请求 GitHub。
-- 手动点击 `检查更新` 不受 24 小时限制。
-- 检测到新版本后只引导用户打开 GitHub Release 页面自行下载。
-- 不内置 GitHub Token，不静默下载 APK，不自动安装 APK。
+## 💡 为什么做这个项目？
+
+我之前使用过同类型的短信 / 通知转发工具。
+
+这类工具通常功能很丰富，但实际使用过程中，我发现对普通用户来说经常会遇到几个问题：
+
+- 设置项比较多，第一次打开不知道从哪里开始；
+- 推送渠道、应用规则、模板、过滤条件混在一起，学习成本较高；
+- 一些功能需要理解 Webhook、通知监听、模板变量等概念；
+- 收到的推送内容字段很多，看起来更像调试信息，不够简洁；
+- 对只想“把另一台安卓机的重要消息转过来”的用户来说，有些功能明显过重。
+
+所以我根据自己的实际使用习惯重新做了 **消息接力 Message Relay**。
+
+这个项目的目标不是堆尽可能多的功能，而是：
+
+> **把常用功能留下，把设置流程变简单，把收到的消息排版变得更清楚。**
+
+普通用户第一次使用时，只需要完成几个核心步骤：
+
+1. 配置一个推送渠道；
+2. 选择需要转发的软件；
+3. 选择消息模板；
+4. 按照提示开启必要权限；
+5. 发送测试消息。
+
+完成以后就可以开始使用
+
+
+### 📸 首页界面
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811145945157.jpg)
+
+---
+
+## 👥 适合哪些用户？
+
+消息接力比较适合：
+
+- 📱 手上有两台或多台手机；
+- 📩 备用安卓机经常收到短信验证码；
+- 💬 不想频繁查看备用机上的微信 / APP 通知；
+- 📞 工作卡、生活卡放在另一台安卓设备中；
+- 🍎 希望把安卓通知同步到 Bark；
+- 💻 希望把手机消息同步到飞书 / 钉钉，在电脑端及时查看；
+- 🧑‍💻 不想折腾复杂自动化、脚本或自建服务器；
+- 🌱 第一次接触消息转发工具的小白用户。
+
+---
+
+
+## 📌 当前版本
+
+| 项目 | 当前值 |
+| --- | --- |
+| applicationId | `io.github.messagerelay` |
+| versionName | `0.1.3` |
+| versionCode | `4` |
+| minSdk | `26`（Android 8.0+） |
+| targetSdk | `36` |
+| 当前状态 | `Beta` |
+
+当前仍是 Beta 测试版。
+
+电话、双卡、AOD / Doze、厂商后台保活和真实公网推送送达，仍建议在自己的真机上继续回归测试。
+
+---
+
+## ✨ 主要功能
+
+### 📡 多种推送渠道
+
+支持：
+
+- **Bark**
+- **飞书自定义机器人**
+- **钉钉机器人**
+
+简单模式下只需要选择和配置主要推送渠道即可。
+
+
+#### 📸 推送渠道界面
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811150138360.jpg)
+
+### ⚙️ 高级功能
+
+在保持简单模式易用的前提下，高级设置中还提供更细的控制能力，例如：
+
+- 多个 Bark 设备配置；
+- Bark 名称、声音、图标 URL、分组、提醒等级和持续响铃参数；
+- 关键词包含 / 排除；
+- 应用独立规则；
+- 高级自定义模板；
+- 多渠道推送；
+- 发送延迟；
+- 通知合并；
+- 自动重试。
+
+普通用户不需要配置这些高级内容，也可以正常使用基础转发功能。
+
+
+### 📩 短信转发
+
+收到短信后，可以将短信内容转发到已经配置的推送渠道。
+
+默认展示方向：
+
+```text
+106900000000
+
+这里是短信内容
+
+📩 来自：106900000000
+
+📲 卡槽：工作卡
+
+🕒 接收时间：2026-08-08 18:00:00
+```
+
+支持识别 SIM / 卡槽信息，并优先显示用户设置的 SIM 名称。
+
+
+#### 📸 短信实际推送效果
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810094412628.jpg)
+
+### 📞 电话通知
+
+支持的电话通知类型：
+
+- 来电提醒
+- 来电接通
+- 未接来电
+
+默认展示方向：
+
+```text
+13423876512
+
+来自：张三
+
+📍 归属地：上海 · 联通
+
+📲 卡槽：工作卡
+
+🔔 提醒：未接来电
+
+🕒 接收时间：2026-08-08 18:00:00
+```
+
+> [!NOTE]
+> 电话号码、联系人和归属地能否在“响铃阶段”立即获取，会受到 Android 版本、手机厂商电话框架以及系统 API 的限制。  
+> 某些设备可能需要在通话结束后才能从系统通话记录中补全更多信息。
+
+
+#### 📸 电话设置
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811150501639.jpg)
+
+#### 📸 电话实际推送效果
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810104033765.jpg)
+
+### 💬 APP 通知转发
+
+可选择微信以及其他安装在手机上的 APP。
+
+默认简洁模板：
+
+```text
+微信
+
+📝：内容：这里是通知内容
+
+🕒：接收时间：2026-08-08 18:00:00
+```
+
+项目会尽量读取 Android 通知实际提供的信息，但不会尝试读取其他 APP 的私有数据库。
+
+> 微信联系人、群聊名称等信息是否能够识别，取决于微信当前版本实际写入 Android 通知的数据。
+
+
+#### 📸 软件选择界面
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811150600615.jpg)
+
+#### 📸 APP 实际推送效果
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810104648687.jpg)
+
+### 🔒 仅锁屏时推送
+
+每个 APP 可以单独开启：
+
+**仅锁屏时推送**
+
+开启后：
+
+- 手机锁屏：正常转发；
+- 屏幕关闭：正常转发；
+- AOD / 息屏显示：正常转发；
+- 锁屏界面被通知点亮：正常转发；
+- 手机已经解锁并正在使用：不转发；
+- 被过滤的旧消息不会在之后锁屏时补发。
+
+
+### 📲 双卡与 SIM 名称
+
+支持识别设备中的 SIM，并允许给 SIM 设置更容易理解的本地名称，例如：
+
+```text
+SIM 1 → 工作卡
+SIM 2 → 生活卡
+```
+
+
+#### 📸 SIM 管理
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811150906545.jpg)
+
+### 🌙 免打扰
+
+支持设置免打扰时间，例如：
+
+```text
+23:00 → 08:00
+```
+
+可以保留验证码、来电、未接来电等重要消息例外。
+
+
+#### 📸 免打扰设置
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810102455776.jpg)
+
+### 📝 消息模板
+
+内置多种模板：
+
+- 简洁
+- 标准
+- 隐私
+- 原始通知
+
+模板页面提供预览，尽量保证预览效果与实际推送结果一致。
+
+
+#### 📸 消息模板与预览
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811151019057.jpg)
+
+### 🧾 转发记录
+
+应用内可以查看：
+
+- 全部
+- 成功
+- 失败
+- 已过滤
+
+支持设置记录保存时间：
+
+- 7 天
+- 30 天
+- 90 天
+- 永久
+- 仅保存状态
+
+
+#### 📸 转发记录
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811151244472.jpg)
+
+
+### 💾 备份与恢复
+
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811151347891.jpg)
+
+### 🛠️ 后台运行检查
+
+提供统一的后台运行检查入口，用于辅助确认：
+
+- 通知使用权
+- 应用通知权限
+- 电话相关权限
+- 电池优化
+- 后台运行状态
+
+部分厂商的“自启动”“锁定后台”等设置无法通过 Android 通用 API 可靠自动判断，需要用户按照系统界面手动确认。
+
+
+#### 📸 后台运行检查
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260811151428552.jpg)
+
+### 🔄 GitHub 版本更新检查
+
+App 内置：
+
+```text
+设置 → 帮助与关于 → 版本更新
+```
+
+主要逻辑：
+
+- 当前版本读取 `BuildConfig.VERSION_NAME` 和 `BuildConfig.VERSION_CODE`；
+- 默认开启自动检查更新；
+- 自动检查最多每 24 小时请求一次 GitHub Releases；
+- 用户可以关闭自动检查，关闭后启动 App 不会主动请求 GitHub；
+- 手动点击“检查更新”不受 24 小时限制；
+- 检测到新版本后，只引导用户打开 GitHub Release 页面自行下载；
+- 不内置 GitHub Token；
+- 不静默下载 APK；
+- 不自动安装 APK。
 
 使用的公开接口：
 
@@ -67,26 +380,361 @@ X-GitHub-Api-Version: 2022-11-28
 
 Debug 构建允许检测 prerelease，Release 构建默认只提示正式 Release。
 
-## 权限说明
+
+---
+
+## ⚖️ 项目优缺点
+
+![](https://cdn.jsdelivr.net/gh/MSCNUAN/blog-images@main/img/20260810095910667.png)
+
+### ✅ 优点
+
+- 面向小白重新整理设置流程；
+- 不需要自己搭建中转服务器；
+- 支持 Bark、飞书、钉钉；
+- 支持短信、电话和普通 APP 通知；
+- 推送模板尽量简洁，不堆调试字段；
+- 支持仅锁屏时推送；
+- 支持双卡与 SIM 自定义名称；
+- 支持免打扰、记录和备份恢复；
+- 项目源码公开，可自行检查和编译。
+
+### ⚠️ 限制
+
+- Android 不同厂商后台策略差异较大；
+- 微信联系人和群聊名称取决于微信实际写入的通知字段；
+- 部分 Android 手机在响铃阶段可能拿不到完整来电号码；
+- 电话联系人和归属地可能需要等通话记录写入后才能补全；
+- 部分能力需要更多品牌真机测试；
+- 本项目大量使用 Codex 辅助开发，出现 Bug 和兼容问题在所难免。
+
+---
+
+
+## 🚀 快速开始
+
+### 第一步：安装 APK
+
+进入仓库的 **Releases** 页面，下载最新版本 APK。
+
+建议只从本项目官方 GitHub 仓库或作者明确提供的发布渠道获取安装包。
+
+### 第二步：配置推送渠道
+
+首次使用建议先配置一个渠道：
+
+- Bark
+- 飞书
+- 钉钉
+
+保存后先发送一次测试消息。
+
+### 第三步：选择需要转发的软件
+
+进入：
+
+```text
+首页 → 软件选择
+```
+
+默认推荐：
+
+- 短信
+- 电话
+- 微信
+
+也可以搜索其他已经安装的 APP。
+
+### 第四步：开启必要权限
+
+按照应用中的提示开启需要的权限。
+
+例如：
+
+- 通知使用权
+- 通知权限
+- 短信相关权限
+- 电话状态权限
+- 通话记录权限
+- 联系人权限（用于显示电话联系人名称）
+
+不同 Android 版本可能显示不同的权限名称。
+
+### 第五步：检查后台运行
+
+如果锁屏一段时间后不再转发，请重点检查：
+
+- 电池优化
+- 后台运行
+- 自启动
+- 最近任务锁定
+
+不同品牌手机设置方法可能不同。
+
+---
+
+## 🎯 设计思路
+
+### 1. 小白优先
+
+常用功能尽量放在首页和基础设置中。
+
+不要求用户先理解：
+
+- 包名
+- Webhook 原理
+- JSON
+- 模板变量
+- Android 后台机制
+
+### 2. 设置流程尽量短
+
+普通用户只需要完成：
+
+```text
+推送渠道
+↓
+软件选择
+↓
+消息模板
+↓
+权限检查
+```
+
+### 3. 推送内容尽量简洁
+
+相比把所有字段全部塞进通知，消息接力更倾向于：
+
+**第一眼先看到重要内容，技术信息放到记录详情和诊断工具。**
+
+### 4. 出错尽量说人话
+
+尽可能把技术错误转换成普通用户能理解的中文提示。
+
+
+### 📸 设置页 / 深色模式
+
+<!--
+截图：docs/images/screenshots/15-settings-dark.png
+建议展示：设置页整体结构，并使用深色模式展示 Material 3 适配效果。
+上传图片后取消下一行注释：
+![设置页深色模式](docs/images/screenshots/15-settings-dark.png)
+-->
+
+---
+
+## 🔐 权限与隐私说明
 
 App 可能会申请以下权限，均用于本地识别和转发你选择的消息：
 
-- 通知访问：读取你选择来源 App 的通知。
-- 通知权限：显示前台状态通知。
-- 设备应用列表 / 查询所有软件包：读取已安装应用，方便选择来源。
-- 电话状态：识别来电提醒、接通和未接来电。
-- 通话记录：可选，用于尽力补全号码。
-- 联系人：可选，用于显示联系人名称。
-- 短信接收：用于短信验证码等短信事件识别。
+| 权限 / 能力 | 用途 |
+| --- | --- |
+| 通知访问 | 读取用户选择来源 APP 的系统通知 |
+| 通知权限 | 显示应用自身必要通知 / 状态提示 |
+| 已安装应用查询 | 读取已安装应用，方便选择通知来源 |
+| 电话状态 | 识别来电提醒、接通和未接来电 |
+| 通话记录 | 可选，用于尽力补全电话号码等信息 |
+| 联系人 | 可选，用于显示电话联系人名称 |
+| 短信接收 | 用于识别短信及验证码等短信事件 |
 
-通知筛选、模板渲染和规则判断都在本机完成。不要在 Issues、截图或日志中公开 Bark 地址、Webhook、签名密钥、完整手机号、验证码或完整通知正文。
+通知筛选、模板渲染和规则判断均在本机完成。
 
-## 构建
+消息接力本身不依赖作者自建的消息中转服务器。
+
+消息会根据你的配置发送到对应的第三方服务，例如：
+
+- Bark
+- 飞书
+- 钉钉
+
+请注意：
+
+- Bark Key / Bark 地址属于敏感凭证；
+- 飞书 Webhook 属于敏感凭证；
+- 钉钉 Webhook / 签名密钥属于敏感凭证；
+- 备份文件可能包含配置和历史消息；
+- Debug / 诊断日志在公开前必须脱敏；
+- 不要在 GitHub Issues、截图或日志中公开完整手机号、验证码、联系人姓名、完整通知正文或完整 Webhook。
+
+
+---
+
+## ⚠️ 已知限制
+
+### 微信联系人 / 群聊名称
+
+应用只能读取微信实际发布到 Android 通知系统中的数据。
+
+如果当前微信版本没有在通知中提供发送者、群聊名称等字段，消息接力无法读取微信私有数据库强行补全。
+
+### 电话号码 / 联系人 / 归属地
+
+电话相关能力会受到 Android 版本、手机品牌、电话框架以及通话记录写入时间影响。
+
+部分手机可能在响铃阶段无法立即拿到完整号码，而在挂断后才能通过通话记录补全。
+
+### Android 后台限制
+
+不同厂商的后台、省电和自启动策略差异很大。
+
+某些设备可能需要额外设置才能长期稳定运行。
+
+---
+
+## 🐛 Bug 与反馈
+
+本项目全程使用 Codex 协助开发。
+
+由于：
+
+- Android 厂商差异大；
+- 通知结构会随着 APP 版本变化；
+- 电话 / SIM API 在不同系统上的行为不同；
+- AI 生成代码本身也可能存在遗漏；
+
+出现 Bug 在所难免。
+
+遇到问题时，建议提交：
+
+```text
+手机品牌：
+手机型号：
+Android版本：
+系统版本：
+消息接力版本：
+
+问题类型：
+[ ] 短信
+[ ] 电话
+[ ] 微信 / APP通知
+[ ] Bark
+[ ] 飞书
+[ ] 钉钉
+[ ] 后台运行
+[ ] 其他
+
+复现步骤：
+
+预期结果：
+
+实际结果：
+```
+
+上传日志前，请先确认日志已经脱敏。
+
+---
+
+## 🌐 暖暖の小窝 · 相关链接与自用推荐
+
+### 🎬 暖暖の小窝 · 资源导航
+
+📝 **个人博客（更多教程 / 软件分享）**  
+👉 https://www.nuan1145.eu.cc/
+
+📦 **个人资源站（综合导航 / 必备收藏）**  
+👉 https://tools.nuan1145.eu.cc/
+
+### 🔥 个人 TG 频道 & 聊天群
+
+📢 **频道（最新资源 / 更新）**  
+👉 https://t.me/NUAN114514
+
+💬 **聊天室（交流 / 答疑 / Bug 反馈）**  
+👉 https://t.me/MSC4652
+
+### 🧰 自用工具推荐
+
+🔧 **自用内网穿透工具（cpolar）**  
+👉 https://www.cpolar.com/?channel=0&invite=6DaX
+
+📂 **PikPak 磁力下载**  
+👉 https://mypikpak.com/drive/activity/invited?invitation-code=66396543
+
+💾 **123 网盘（提取码：NUAN）**  
+👉 https://www.123684.com/s/R2hjVv-
+
+💰 **币安 Binance（新人注册福利）**  
+👉 https://www.bmwweb.academy/referral/earn-together/refer2earn-usdc/claim?hl=zh-TC&ref=GRO_28502_RAE9X&utm_source=default
+
+🌍 **海外账号 / AI / 流媒体 / 游戏**  
+👉 https://accboyytbnn.acceboy.com/
+
+🍎 **苹果外区 ID / 软件 / 充值卡购买**  
+👉 https://goso002.com/?from=24529
+
+### 🚀 自用网络工具推荐
+
+✈️ **相关说明 / 推荐入口**  
+👉 https://t.me/NUAN114514/5
+
+> [!CAUTION]
+> **温馨提示**
+>
+> 以上部分链接可能包含推广 / 邀请关系，相关服务仅作信息分享。  
+> 涉及账号、资金、通信服务、跨境服务、数字资产、网络工具或版权内容时，请先确认自己是否符合相应的年龄、地区与平台使用条件，并自行判断风险，遵守当地法律法规与平台规则。  
+> 部分链接可能随时失效，实际情况以对应官方页面为准。
+
+
+## 🧪 测试说明
+
+每次准备发布新版本时，建议至少检查：
+
+- APP 是否可以正常启动；
+- Bark 测试推送；
+- 飞书测试推送；
+- 短信真实转发；
+- 微信 / APP 通知转发；
+- 电话提醒；
+- 仅锁屏时推送；
+- 免打扰；
+- 记录页面；
+- 备份恢复；
+- 更新检查；
+- 深色模式；
+- 大字体；
+- 旧版本覆盖升级。
+
+即使自动化测试全部通过，也不能完全代替真机测试。
+
+---
+
+## 🧑‍💻 开发与构建
+
+### 技术栈
+
+项目主要使用：
+
+- Kotlin
+- Jetpack Compose
+- Material 3
+- Navigation Compose
+- Room
+- DataStore
+- WorkManager
+- NotificationListenerService
+- Android Telephony API
+
+### 克隆仓库
+
+```bash
+git clone https://github.com/MSCNUAN/message-relay-android.git
+cd message-relay-android
+```
+
+### Windows
 
 ```powershell
 .\gradlew.bat :app:compileDebugKotlin --no-daemon --console=plain
 .\gradlew.bat :app:testDebugUnitTest --no-daemon --console=plain
 .\gradlew.bat :app:assembleDebug --no-daemon --console=plain
+```
+
+### Linux / macOS
+
+```bash
+./gradlew :app:compileDebugKotlin --no-daemon --console=plain
+./gradlew :app:testDebugUnitTest --no-daemon --console=plain
+./gradlew :app:assembleDebug --no-daemon --console=plain
 ```
 
 Debug APK 默认输出：
@@ -95,34 +743,79 @@ Debug APK 默认输出：
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-本项目源码仓库不提交 APK。公开分发时请在 GitHub Releases 上传签名后的 APK，并附带 SHA-256。
+### 连接设备测试
 
-## 开发文档
+Windows：
+
+```powershell
+.\gradlew.bat :app:installDebug connectedDebugAndroidTest --no-daemon --console=plain
+```
+
+Linux / macOS：
+
+```bash
+./gradlew :app:installDebug connectedDebugAndroidTest --no-daemon --console=plain
+```
+
+`connectedDebugAndroidTest` 需要连接 Android 模拟器或测试设备。
+
+> [!NOTE]
+> 本项目源码仓库不建议直接提交 APK。公开分发时建议通过 GitHub Releases 上传对应 APK，并附带 SHA-256 校验信息。
+
+### 📚 开发文档
 
 - [架构说明](docs/ARCHITECTURE.md)：按 UI、设置、通知入口、规则、模板、渠道、备份和更新检查拆解项目。
 - [开发与验证](docs/DEVELOPMENT.md)：本地构建、测试、模拟器 QA、正式签名和维护注意事项。
 - [开源前检查清单](docs/OPEN_SOURCE_CHECKLIST.md)：发布前的文件、敏感信息和构建检查。
 - [GitHub Release 模板](docs/RELEASE_TEMPLATE.md)：发布说明和校验信息模板。
 
-## 测试
+---
 
-```powershell
-.\gradlew.bat :app:testDebugUnitTest --no-daemon --console=plain
-.\gradlew.bat :app:installDebug connectedDebugAndroidTest --no-daemon --console=plain
+## 🗺️ 后续计划
+
+- [ ] 持续完善不同品牌手机兼容性
+- [ ] 完善微信通知字段解析
+- [ ] 完善电话响铃阶段号码识别
+- [ ] 完善双卡 / eSIM 真机测试
+- [ ] 增加更多自动化测试
+- [ ] 完善 GitHub Release 与版本更新流程
+- [ ] 根据用户反馈持续精简使用体验
+
+---
+
+## 📄 开源许可
+
+本项目使用：
+
+**GNU General Public License v3.0**
+
+```text
+GPL-3.0-only
 ```
 
-`connectedDebugAndroidTest` 需要连接 Android 模拟器或测试设备。
-
-## 已知限制
-
-- 不同厂商对后台、自启、锁后台、省电限制和 AOD/Doze 的处理差异很大。
-- 电话号码、联系人和归属地能否补全取决于系统权限、Android 版本和厂商限制。
-- 离线号码归属地和运营商信息可能因携号转网不准确。
-- Bark、飞书、钉钉实际送达取决于网络、机器人配置和服务端状态。
-- 当前主要面向 GitHub / 自用分发，未按 Google Play 政策做权限裁剪。
-
-## 许可证
-
-GPL-3.0-only
-
 Copyright (C) 2026 MSCNUAN
+
+---
+
+## 👤 作者
+
+**暖暖（MSCNUAN）**
+
+项目主要根据个人实际使用需求进行设计和调整。
+
+如果这个项目刚好解决了你的需求，欢迎：
+
+- ⭐ Star
+- 🐛 提交 Issue
+- 🔧 提交 Pull Request
+- 💬 分享你的设备兼容情况
+
+---
+
+<div align="center">
+
+**消息接力 Message Relay**
+
+让备用安卓机不再需要一直拿在手里，也尽量不错过重要消息。
+
+</div>
